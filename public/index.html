@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>La carte du Baobab Gourmand</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 720px; margin: 2rem auto; color: #15233A; }
+    h1 { color: #9a684b; } h2 { border-bottom: 2px solid #eee; padding-bottom: .3rem; }
+    li { display: flex; justify-content: space-between; padding: .3rem 0; }
+    .indispo { color: #999; text-decoration: line-through; }
+  </style>
+</head>
+<body>
+  <h1>La carte du Baobab Gourmand</h1>
+  <div id="carte">Chargement…</div>
+  <script>
+    fetch("/api/plats?limite=50")
+      .then((reponse) => reponse.json())
+      .then((donnees) => {
+        const parCategorie = {};
+        for (const plat of donnees.resultats) {
+          (parCategorie[plat.categorie] ||= []).push(plat);
+        }
+        document.getElementById("carte").innerHTML = Object.entries(parCategorie)
+          .map(([categorie, plats]) => `<h2>${categorie}</h2><ul>` + plats.map((p) =>
+            `<li class="${p.disponible ? "" : "indispo"}"><span>${p.nom}</span><b>${p.prix} FCFA</b></li>`
+          ).join("") + "</ul>")
+          .join("");
+      });
+  </script>
+</body>
+</html>
