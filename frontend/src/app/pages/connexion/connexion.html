@@ -1,0 +1,68 @@
+<div class="connexion-page">
+
+  <div class="connexion-card">
+
+    <a routerLink="/" class="retour">
+      ← Retour au restaurant
+    </a>
+
+    <div class="logo">
+      <div class="logo-icon">B</div>
+      <div>
+        <h1>BAOBAB</h1>
+        <span>GOURMAND</span>
+      </div>
+    </div>
+
+    <div class="connexion-titre">
+      <span class="sur-titre">ESPACE SÉCURISÉ</span>
+      <h2>Bienvenue !</h2>
+      <p>Connectez-vous pour accéder à l'administration.</p>
+    </div>
+
+    <form (ngSubmit)="seConnecter()">
+
+      <div class="form-group">
+        <label for="nomUtilisateur">Nom d'utilisateur</label>
+
+        <input
+          type="text"
+          id="nomUtilisateur"
+          name="nomUtilisateur"
+          [(ngModel)]="nomUtilisateur"
+          placeholder="Votre nom d'utilisateur"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label for="motDePasse">Mot de passe</label>
+
+        <input
+          type="password"
+          id="motDePasse"
+          name="motDePasse"
+          [(ngModel)]="motDePasse"
+          placeholder="Votre mot de passe"
+          required>
+      </div>
+
+      @if (messageErreur) {
+        <div class="message-erreur">
+          {{ messageErreur }}
+        </div>
+      }
+
+      <button type="submit" [disabled]="chargement">
+        {{ chargement ? 'Connexion en cours...' : 'Se connecter' }}
+        <span>→</span>
+      </button>
+
+    </form>
+
+    <div class="connexion-footer">
+      Baobab Gourmand · Administration
+    </div>
+
+  </div>
+
+</div>

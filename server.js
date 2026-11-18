@@ -1,5 +1,6 @@
 require("dotenv").config({ quiet: true });
 
+
 const app = require("./app");
 const connecterBase = require("./config/db");
 
@@ -13,7 +14,7 @@ connecterBase(process.env.MONGO_URI)
   })
   .catch((err) => {
     console.error(
-      "Impossible de se connecter à MongoDB :",
+      "Impossible de se connecter Ã  MongoDB :",
       err.message,
     );
     process.exit(1);

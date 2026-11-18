@@ -1,0 +1,214 @@
+<div class="dashboard">
+
+  <header class="dashboard-header">
+    <div>
+      <h1>Tableau de bord</h1>
+      <p>Bienvenue dans l'espace de gestion du Baobab Gourmand.</p>
+    </div>
+
+    <button class="btn-actualiser" (click)="chargerDashboard()">
+      &#8635; Actualiser
+    </button>
+  </header>
+
+  <div *ngIf="chargement" class="message">
+    Chargement des statistiques...
+  </div>
+
+  <div *ngIf="erreur" class="message erreur">
+    {{ erreur }}
+  </div>
+
+  <ng-container *ngIf="!chargement && !erreur">
+
+    <!-- CARTES STATISTIQUES -->
+    <section class="statistiques">
+
+      <article class="carte-statistique">
+        <div class="icone bleu">&#9632;</div>
+        <div>
+          <p>Total des commandes</p>
+          <h2>{{ nombreCommandes }}</h2>
+          <span>Commandes enregistrées</span>
+        </div>
+      </article>
+
+      <article class="carte-statistique">
+        <div class="icone vert">FCFA</div>
+        <div>
+          <p>Chiffre d'affaires</p>
+          <h2>{{ chiffreAffaires | number:'1.0-0' }} FCFA</h2>
+          <span>Commandes payées</span>
+        </div>
+      </article>
+
+      <article class="carte-statistique">
+        <div class="icone orange">&#9203;</div>
+        <div>
+          <p>Commandes en cours</p>
+          <h2>{{ commandesEnCours }}</h2>
+          <span>En attente de paiement</span>
+        </div>
+      </article>
+
+      <article class="carte-statistique">
+        <div class="icone rouge">&#10006;</div>
+        <div>
+          <p>Commandes annulées</p>
+          <h2>{{ commandesAnnulees }}</h2>
+          <span>Commandes annulées</span>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- GRAPHIQUES -->
+    <section class="graphiques">
+
+      <!-- ÉVOLUTION DU CHIFFRE D'AFFAIRES -->
+      <article class="carte-graphique">
+
+        <div class="section-titre">
+          <h2>Évolution du chiffre d'affaires</h2>
+          <p>Simulation de répartition du chiffre d'affaires — avril à septembre 2026</p>
+        </div>
+
+        <div class="graphique-colonnes">
+
+          <div
+            class="colonne-container"
+            *ngFor="let mois of evolutionCA">
+
+            <span class="valeur-colonne">
+              {{ mois.montant | number:'1.0-0' }}
+            </span>
+
+            <div class="zone-colonne">
+              <div
+                class="colonne"
+                [style.height.%]="mois.hauteur"
+                [title]="mois.montant + ' FCFA'">
+              </div>
+            </div>
+
+            <span class="label-mois">{{ mois.label }}</span>
+
+          </div>
+
+        </div>
+
+        <div class="legende">
+          <span class="point-legende bleu-point"></span>
+          Chiffre d'affaires (FCFA)
+        </div>
+
+      </article>
+
+      <!-- RÉPARTITION DES COMMANDES -->
+      <article class="carte-graphique">
+
+        <div class="section-titre">
+          <h2>Répartition des commandes</h2>
+          <p>Distribution selon le statut des commandes</p>
+        </div>
+
+        <div class="total-repartition">
+          <strong>{{ nombreCommandes }}</strong>
+          <span>Commandes au total</span>
+        </div>
+
+        <div
+          class="ligne-repartition"
+          *ngFor="let statut of repartitionStatuts">
+
+          <div class="repartition-infos">
+            <span>{{ statut.label }}</span>
+            <strong>{{ statut.nombre }}</strong>
+          </div>
+
+          <div class="fond-barre">
+            <div
+              [ngClass]="statut.classe"
+              [style.width.%]="statut.pourcentage">
+            </div>
+          </div>
+
+          <span class="pourcentage">
+            {{ statut.pourcentage | number:'1.0-1' }} %
+          </span>
+
+        </div>
+
+      </article>
+
+    </section>
+
+    <!-- DERNIÈRES COMMANDES -->
+    <section class="section-commandes">
+
+      <div class="section-titre">
+        <div>
+          <h2>Dernières commandes</h2>
+          <p>Les cinq commandes les plus récentes</p>
+        </div>
+      </div>
+
+      <div class="table-container">
+
+        <table>
+          <thead>
+            <tr>
+              <th>N° Commande</th>
+              <th>Client</th>
+              <th>Date</th>
+              <th>Montant</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let commande of dernieresCommandes">
+
+              <td class="numero">{{ commande.numero }}</td>
+
+              <td>
+                {{ commande.client.prenom }}
+                {{ commande.client.nom }}
+              </td>
+
+              <td>{{ commande.date | date:'dd/MM/yyyy' }}</td>
+
+              <td class="montant">
+                {{ commande.total | number:'1.0-0' }} FCFA
+              </td>
+
+              <td>
+                <span
+                  class="badge"
+                  [ngClass]="{
+                    'badge-paye': commande.statut === 'Payée',
+                    'badge-attente': commande.statut === 'En cours',
+                    'badge-annule': commande.statut === 'Annulée'
+                  }">
+                  {{ commande.statut }}
+                </span>
+              </td>
+
+            </tr>
+
+            <tr *ngIf="dernieresCommandes.length === 0">
+              <td colspan="5" class="aucune-commande">
+                Aucune commande disponible.
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+
+      </div>
+
+    </section>
+
+  </ng-container>
+
+</div>

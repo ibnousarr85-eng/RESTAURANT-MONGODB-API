@@ -1,0 +1,342 @@
+<div class="plats-container">
+
+  <header class="page-header">
+    <div>
+      <h1>Gestion des plats</h1>
+      <p>Consultez et gérez les plats du restaurant.</p>
+    </div>
+
+    <button class="btn-ajouter" (click)="ouvrirFormulaire()">
+      + Ajouter un plat
+    </button>
+  </header>
+
+  <div class="success" *ngIf="succes">
+    {{ succes }}
+  </div>
+
+  <div class="error" *ngIf="erreur">
+    {{ erreur }}
+  </div>
+
+  <!-- FORMULAIRE -->
+
+  <section class="formulaire-container" *ngIf="formulaireVisible">
+
+    <div class="formulaire-header">
+      <div>
+        <h2>{{ modeEdition ? 'Modifier le plat' : 'Ajouter un nouveau plat' }}</h2>
+        <p>{{ modeEdition ? 'Modifiez les informations du plat.' : 'Remplissez les informations du plat.' }}</p>
+      </div>
+
+      <button class="btn-fermer" (click)="fermerFormulaire()">✕</button>
+    </div>
+
+    <form (ngSubmit)="enregistrerPlat()" #platForm="ngForm">
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Code du plat *</label>
+          <input
+            type="text"
+            name="code"
+            [(ngModel)]="nouveauPlat.code"
+            placeholder="Ex : P21"
+            pattern="P[0-9]{2,}"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label>Nom du plat *</label>
+          <input
+            type="text"
+            name="nom"
+            [(ngModel)]="nouveauPlat.nom"
+            placeholder="Ex : Poulet braisé"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label>Catégorie *</label>
+          <select
+            name="categorie"
+            [(ngModel)]="nouveauPlat.categorie"
+            required
+          >
+            <option value="Entrée">Entrée</option>
+            <option value="Plat">Plat</option>
+            <option value="Dessert">Dessert</option>
+            <option value="Boisson">Boisson</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Prix en FCFA *</label>
+          <input
+            type="number"
+            name="prix"
+            [(ngModel)]="nouveauPlat.prix"
+            min="0"
+            required
+          >
+        </div>
+
+      </div>
+
+      <div class="options-group">
+
+        <label class="checkbox-option">
+          <input
+            type="checkbox"
+            name="vegetarien"
+            [(ngModel)]="nouveauPlat.vegetarien"
+          >
+          Végétarien
+        </label>
+
+        <label class="checkbox-option">
+          <input
+            type="checkbox"
+            name="epice"
+            [(ngModel)]="nouveauPlat.epice"
+          >
+          Épicé
+        </label>
+
+        <label class="checkbox-option">
+          <input
+            type="checkbox"
+            name="disponible"
+            [(ngModel)]="nouveauPlat.disponible"
+          >
+          Disponible
+        </label>
+
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="button"
+          class="btn-annuler"
+          (click)="fermerFormulaire()"
+        >
+          Annuler
+        </button>
+
+        <button
+          type="submit"
+          class="btn-enregistrer"
+          [disabled]="platForm.invalid || enregistrement"
+        >
+          {{ enregistrement ? 'Enregistrement...' : (modeEdition ? 'Enregistrer les modifications' : 'Enregistrer le plat') }}
+        </button>
+      </div>
+
+    </form>
+
+  </section>
+
+  <!-- RECHERCHE ET FILTRAGE AVANCÉS -->
+
+<section class="filtres-container">
+
+  <div class="recherche-group">
+    <label for="recherche">Rechercher un plat</label>
+    <input
+      id="recherche"
+      type="text"
+      name="recherche"
+      [(ngModel)]="recherche"
+      (keyup.enter)="rechercherPlats()"
+      placeholder="Ex : Yassa, Thiakry, Poulet..."
+    >
+  </div>
+
+  <div class="categorie-group">
+    <label for="categorieFiltre">Catégorie</label>
+    <select
+      id="categorieFiltre"
+      name="categorieFiltre"
+      [(ngModel)]="categorieSelectionnee"
+    >
+      <option value="">Toutes les catégories</option>
+      <option value="Entrée">Entrée</option>
+      <option value="Plat">Plat</option>
+      <option value="Dessert">Dessert</option>
+      <option value="Boisson">Boisson</option>
+    </select>
+  </div>
+
+  <div class="categorie-group">
+    <label for="prixMax">Prix maximum (FCFA)</label>
+    <input
+      id="prixMax"
+      type="number"
+      name="prixMax"
+      [(ngModel)]="prixMax"
+      min="0"
+      placeholder="Ex : 3000"
+    >
+  </div>
+
+  <div class="categorie-group">
+    <label for="tri">Trier les plats</label>
+    <select
+      id="tri"
+      name="tri"
+      [(ngModel)]="tri"
+    >
+      <option value="">Ordre par défaut</option>
+      <option value="nom">Nom : A à Z</option>
+      <option value="prix">Prix : croissant</option>
+      <option value="-prix">Prix : décroissant</option>
+    </select>
+  </div>
+
+  <div class="categorie-group">
+    <label for="disponible">Disponibilité</label>
+    <select
+      id="disponible"
+      name="disponible"
+      [(ngModel)]="disponible"
+    >
+      <option [ngValue]="null">Tous les plats</option>
+      <option [ngValue]="true">Disponibles uniquement</option>
+      <option [ngValue]="false">Indisponibles uniquement</option>
+    </select>
+  </div>
+
+  <div class="categorie-group">
+    <label for="vegetarien">Type de plat</label>
+    <select
+      id="vegetarien"
+      name="vegetarien"
+      [(ngModel)]="vegetarien"
+    >
+      <option [ngValue]="null">Tous les types</option>
+      <option [ngValue]="true">Végétariens</option>
+      <option [ngValue]="false">Non végétariens</option>
+    </select>
+  </div>
+
+  <button
+    type="button"
+    class="btn-rechercher"
+    (click)="rechercherPlats()"
+  >
+    Appliquer les filtres
+  </button>
+
+  <button
+    type="button"
+    class="btn-reinitialiser"
+    (click)="reinitialiserFiltres()"
+  >
+    Réinitialiser
+  </button>
+
+</section>
+
+  <!-- STATISTIQUES -->
+
+  <section class="stats" *ngIf="donnees">
+    <div class="stat-card">
+      <span>Total des plats</span>
+      <strong>{{ donnees.total }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>Page actuelle</span>
+      <strong>{{ donnees.page }} / {{ donnees.pages }}</strong>
+    </div>
+  </section>
+
+  <div class="message" *ngIf="chargement">
+    Chargement des plats...
+  </div>
+
+  <!-- CARTES DES PLATS -->
+
+  <section class="plats-grid" *ngIf="!chargement && donnees">
+
+    <article class="plat-card" *ngFor="let plat of donnees.resultats">
+
+      <div class="plat-header">
+        <span class="plat-code">{{ plat.code }}</span>
+
+        <span
+          class="badge"
+          [ngClass]="plat.disponible ? 'disponible' : 'indisponible'"
+        >
+          {{ plat.disponible ? 'Disponible' : 'Indisponible' }}
+        </span>
+      </div>
+
+      <div class="plat-infos">
+        <span class="categorie">{{ plat.categorie }}</span>
+        <h2>{{ plat.nom }}</h2>
+        <p class="prix">{{ plat.prix | number:'1.0-0' }} FCFA</p>
+      </div>
+
+      <div class="plat-caracteristiques">
+        <span [class.actif]="plat.vegetarien">
+          {{ plat.vegetarien ? '✓ Végétarien' : 'Non végétarien' }}
+        </span>
+
+        <span [class.actif]="plat.epice">
+          {{ plat.epice ? '🌶 Épicé' : 'Non épicé' }}
+        </span>
+      </div>
+
+      <div class="plat-actions">
+
+        <button
+          class="btn-modifier"
+          (click)="ouvrirModification(plat)"
+        >
+          Modifier
+        </button>
+
+        <button
+          class="btn-supprimer"
+          (click)="supprimerPlat(plat)"
+        >
+          Supprimer
+        </button>
+
+      </div>
+
+    </article>
+
+    <div class="empty" *ngIf="donnees.resultats.length === 0">
+      Aucun plat trouvé.
+    </div>
+
+  </section>
+
+  <!-- PAGINATION -->
+
+  <div class="pagination" *ngIf="donnees && donnees.pages > 0">
+
+    <button
+      (click)="changerPage(donnees.page - 1)"
+      [disabled]="donnees.page <= 1 || chargement"
+    >
+      Précédent
+    </button>
+
+    <span>Page {{ donnees.page }} sur {{ donnees.pages }}</span>
+
+    <button
+      (click)="changerPage(donnees.page + 1)"
+      [disabled]="donnees.page >= donnees.pages || chargement"
+    >
+      Suivant
+    </button>
+
+  </div>
+
+</div>

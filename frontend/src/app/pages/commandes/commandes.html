@@ -1,0 +1,295 @@
+<div class="commandes-container">
+
+  <header class="page-header">
+    <div>
+      <h1>Gestion des commandes</h1>
+      <p>Consultez et suivez les commandes du restaurant.</p>
+    </div>
+  </header>
+
+  <section class="filters">
+    <div class="filter-group">
+      <label for="statut">Filtrer par statut</label>
+
+      <select id="statut" (change)="changerStatut($event)">
+        <option value="">Toutes les commandes</option>
+        <option value="En cours">En cours</option>
+        <option value="Payée">Payées</option>
+        <option value="Annulée">Annulées</option>
+      </select>
+    </div>
+
+    <div class="total-commandes" *ngIf="donnees">
+      Total : <strong>{{ donnees.total }}</strong> commandes
+    </div>
+  </section>
+
+  <div class="message" *ngIf="chargement">
+    Chargement des commandes...
+  </div>
+
+  <div class="error" *ngIf="erreur">
+    {{ erreur }}
+  </div>
+
+  <div class="table-container" *ngIf="!chargement && donnees">
+
+    <table>
+      <thead>
+        <tr>
+          <th>Numéro</th>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Client</th>
+          <th>Serveur</th>
+          <th>Total</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let commande of donnees.resultats">
+
+          <td>{{ commande.numero }}</td>
+
+          <td>{{ commande.date | date:'dd/MM/yyyy' }}</td>
+
+          <td>{{ commande.type }}</td>
+
+          <td>
+            {{ commande.client.prenom }}
+            {{ commande.client.nom }}
+          </td>
+
+          <td>{{ commande.serveur }}</td>
+
+          <td>
+            {{ commande.total | number:'1.0-0' }} FCFA
+          </td>
+
+          <td>
+            <span
+              class="badge"
+              [ngClass]="{
+                'en-cours': commande.statut === 'En cours',
+                'payee': commande.statut === 'Payée',
+                'annulee': commande.statut === 'Annulée'
+              }"
+            >
+              {{ commande.statut }}
+            </span>
+          </td>
+
+          <td class="actions-cell">
+
+            <button
+              class="btn-details"
+              (click)="voirDetails(commande)"
+            >
+              Voir les détails
+            </button>
+
+            <button
+              *ngIf="commande.statut === 'En cours'"
+              class="btn-encaisser"
+              (click)="encaisserCommande(commande)"
+            >
+              Encaisser
+            </button>
+
+            <span *ngIf="commande.statut === 'Payée'">
+              Déjà payée
+            </span>
+
+            <span *ngIf="commande.statut === 'Annulée'">
+              —
+            </span>
+
+          </td>
+
+        </tr>
+
+        <tr *ngIf="donnees.resultats.length === 0">
+          <td colspan="8" class="empty">
+            Aucune commande trouvée.
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="pagination" *ngIf="donnees && donnees.pages > 0">
+
+    <button
+      (click)="changerPage(donnees.page - 1)"
+      [disabled]="donnees.page <= 1 || chargement"
+    >
+      Précédent
+    </button>
+
+    <span>
+      Page {{ donnees.page }} sur {{ donnees.pages }}
+    </span>
+
+    <button
+      (click)="changerPage(donnees.page + 1)"
+      [disabled]="donnees.page >= donnees.pages || chargement"
+    >
+      Suivant
+    </button>
+
+  </div>
+
+</div>
+
+<!-- FENÊTRE DES DÉTAILS -->
+
+<div
+  class="modal-overlay"
+  *ngIf="commandeSelectionnee"
+  (click)="fermerDetails()"
+>
+
+  <div class="modal-details" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <div>
+        <h2>Détails de la commande</h2>
+        <p>{{ commandeSelectionnee.numero }}</p>
+      </div>
+
+      <button class="btn-fermer" (click)="fermerDetails()">
+        ×
+      </button>
+    </div>
+
+    <div class="modal-body">
+
+      <div *ngIf="chargementDetails" class="message">
+        Chargement des détails...
+      </div>
+
+      <div *ngIf="erreurDetails" class="error">
+        {{ erreurDetails }}
+      </div>
+
+      <div *ngIf="!chargementDetails && !erreurDetails">
+
+        <div class="details-grid">
+
+          <div>
+            <span>Client</span>
+            <strong>
+              {{ commandeSelectionnee.client.prenom }}
+              {{ commandeSelectionnee.client.nom }}
+            </strong>
+          </div>
+
+          <div>
+            <span>Date</span>
+            <strong>
+              {{ commandeSelectionnee.date | date:'dd/MM/yyyy à HH:mm' }}
+            </strong>
+          </div>
+
+          <div>
+            <span>Type</span>
+            <strong>{{ commandeSelectionnee.type }}</strong>
+          </div>
+
+          <div>
+            <span>Serveur</span>
+            <strong>{{ commandeSelectionnee.serveur || 'Non renseigné' }}</strong>
+          </div>
+
+          <div>
+            <span>Table</span>
+            <strong>{{ commandeSelectionnee.table || 'Non renseignée' }}</strong>
+          </div>
+
+          <div>
+            <span>Nombre de couverts</span>
+            <strong>{{ commandeSelectionnee.nbCouverts || 'Non renseigné' }}</strong>
+          </div>
+
+          <div>
+            <span>Statut</span>
+            <strong>{{ commandeSelectionnee.statut }}</strong>
+          </div>
+
+          <div>
+            <span>Mode de paiement</span>
+            <strong>{{ commandeSelectionnee.modePaiement || 'Non renseigné' }}</strong>
+          </div>
+
+        </div>
+
+        <h3>Plats commandés</h3>
+
+        <div class="details-table-container">
+
+          <table class="details-table">
+
+            <thead>
+              <tr>
+                <th>Produit</th>
+                <th>Prix unitaire</th>
+                <th>Quantité</th>
+                <th>Sous-total</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <tr *ngFor="let plat of commandeSelectionnee.plats">
+
+                <td>
+                  <strong>{{ plat.nom }}</strong>
+                  <small>{{ plat.code }} • {{ plat.categorie }}</small>
+                </td>
+
+                <td>{{ plat.prixUnitaire | number:'1.0-0' }} FCFA</td>
+
+                <td>{{ plat.quantite }}</td>
+
+                <td>
+                  {{ plat.prixUnitaire * plat.quantite | number:'1.0-0' }} FCFA
+                </td>
+
+              </tr>
+
+              <tr *ngIf="!commandeSelectionnee.plats?.length">
+                <td colspan="4" class="empty">
+                  Aucun plat enregistré pour cette commande.
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+        <div class="total-details">
+          <span>Total de la commande</span>
+          <strong>
+            {{ commandeSelectionnee.total | number:'1.0-0' }} FCFA
+          </strong>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-fermer-modal" (click)="fermerDetails()">
+        Fermer
+      </button>
+    </div>
+
+  </div>
+
+</div>

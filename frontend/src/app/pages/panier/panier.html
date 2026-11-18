@@ -1,0 +1,202 @@
+<div class="page-panier">
+
+  <header class="panier-header">
+    <div>
+      <h1>Mon panier 🛒</h1>
+      <p>Retrouvez les plats que vous avez sélectionnés.</p>
+    </div>
+
+    <span class="badge-panier">
+      {{ nombreArticles }} article(s)
+    </span>
+  </header>
+
+  <div *ngIf="message" class="message-succes">
+    {{ message }}
+  </div>
+
+  <div *ngIf="erreur" class="message-erreur">
+    {{ erreur }}
+  </div>
+
+  <div *ngIf="lignes.length === 0" class="panier-vide">
+    <div class="icone-vide">🛒</div>
+    <h2>Votre panier est vide</h2>
+    <p>Ajoutez des plats depuis notre catalogue.</p>
+  </div>
+
+  <ng-container *ngIf="lignes.length > 0">
+
+    <section class="liste-panier">
+
+      <article class="ligne-panier" *ngFor="let ligne of lignes">
+
+        <div class="info-produit">
+          <h3>{{ ligne.produit.nom }}</h3>
+          <p>{{ ligne.produit.categorie }}</p>
+          <strong>
+            {{ ligne.produit.prix | number:'1.0-0' }} FCFA
+          </strong>
+        </div>
+
+        <div class="quantite">
+          <button (click)="diminuer(ligne.produit.code)">−</button>
+          <span>{{ ligne.quantite }}</span>
+          <button (click)="augmenter(ligne.produit.code)">+</button>
+        </div>
+
+        <div class="sous-total">
+          {{ ligne.produit.prix * ligne.quantite | number:'1.0-0' }} FCFA
+        </div>
+
+        <button
+          class="btn-supprimer"
+          (click)="supprimer(ligne.produit.code)">
+          Supprimer
+        </button>
+
+      </article>
+
+    </section>
+
+    <section class="resume-panier">
+
+      <div>
+        <span>Nombre d'articles</span>
+        <strong>{{ nombreArticles }}</strong>
+      </div>
+
+      <div class="total-final">
+        <span>Total à payer</span>
+        <strong>{{ total | number:'1.0-0' }} FCFA</strong>
+      </div>
+
+      <button class="btn-vider" (click)="viderPanier()">
+        Vider le panier
+      </button>
+
+      <button
+        class="btn-valider"
+        (click)="afficherFormulaire()">
+        Valider ma commande
+      </button>
+
+    </section>
+
+    <section class="formulaire-commande" *ngIf="formulaireVisible">
+
+      <h2>Finaliser ma commande</h2>
+      <p>Veuillez renseigner vos informations.</p>
+
+      <form (ngSubmit)="validerCommande()" #formCommande="ngForm">
+
+        <div class="champs-formulaire">
+
+          <div class="champ">
+            <label>Prénom</label>
+            <input
+              type="text"
+              name="prenom"
+              [(ngModel)]="client.prenom"
+              required
+              placeholder="Votre prénom">
+          </div>
+
+          <div class="champ">
+            <label>Nom</label>
+            <input
+              type="text"
+              name="nom"
+              [(ngModel)]="client.nom"
+              required
+              placeholder="Votre nom">
+          </div>
+
+          <div class="champ">
+            <label>Type de commande</label>
+            <select
+              name="type"
+              [(ngModel)]="client.type"
+              required>
+
+              <option value="Sur place">Sur place</option>
+              <option value="À emporter">À emporter</option>
+              <option value="Livraison">Livraison</option>
+
+            </select>
+          </div>
+
+          <ng-container *ngIf="client.type === 'Sur place'">
+
+            <div class="champ">
+              <label>Numéro de table</label>
+              <input
+                type="number"
+                name="table"
+                [(ngModel)]="client.table"
+                min="1"
+                required>
+            </div>
+
+            <div class="champ">
+              <label>Nombre de couverts</label>
+              <input
+                type="number"
+                name="nbCouverts"
+                [(ngModel)]="client.nbCouverts"
+                min="1"
+                required>
+            </div>
+
+          </ng-container>
+
+          <div class="champ" *ngIf="client.type === 'Livraison'">
+            <label>Quartier de livraison</label>
+            <input
+              type="text"
+              name="quartier"
+              [(ngModel)]="client.quartier"
+              required
+              placeholder="Ex : Ouest Foire">
+          </div>
+
+        </div>
+
+        <div class="recapitulatif">
+          <span>Total estimé</span>
+          <strong>
+            {{ (total + (client.type === 'Livraison' ? 1000 : 0)) | number:'1.0-0' }}
+            FCFA
+          </strong>
+          <small *ngIf="client.type === 'Livraison'">
+            Dont 1 000 FCFA de frais de livraison.
+          </small>
+        </div>
+
+        <div class="actions-formulaire">
+
+          <button
+            type="button"
+            class="btn-annuler"
+            (click)="annulerValidation()">
+            Annuler
+          </button>
+
+          <button
+            type="submit"
+            class="btn-confirmer"
+            [disabled]="chargement || !formCommande.valid">
+
+            {{ chargement ? 'Enregistrement...' : 'Confirmer la commande' }}
+
+          </button>
+
+        </div>
+
+      </form>
+
+    </section>
+
+  </ng-container>
+
+</div>

@@ -4,3 +4,8 @@ node_modules/
 !.env.example
 npm-debug.log*
 .DS_Store
+
+# Fichiers d'environnement et secrets
+.env
+.env.*
+!.env.example

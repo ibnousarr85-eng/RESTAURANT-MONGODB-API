@@ -1,0 +1,102 @@
+<main class="catalogue">
+  <div class="catalogue-content">
+  <a class="retour-accueil" routerLink="/">
+    <span aria-hidden="true">←</span> Retour à l'accueil
+  </a>
+  <section class="intro-carte" aria-labelledby="titre-carte">
+    <div class="intro-texte">
+      <span class="surtitre"><span></span> CUISINE GÉNÉREUSE · SAVEURS AUTHENTIQUES</span>
+      <h1 id="titre-carte">Notre <em>carte</em></h1>
+      <p>Des recettes soigneusement préparées, inspirées par les richesses du Sénégal et le plaisir de partager.</p>
+    </div>
+    <a class="lien-panier" routerLink="/panier" aria-label="Voir mon panier">
+      <span class="icone-panier" aria-hidden="true">♧</span>
+      <span>Mon panier</span>
+      <span class="compteur-panier">{{ nombreArticles }}</span>
+    </a>
+  </section>
+
+  <section class="outils-carte" aria-label="Rechercher et filtrer les plats">
+    <label class="recherche" for="recherche">
+      <span aria-hidden="true" class="loupe">⌕</span>
+      <input id="recherche" type="search" placeholder="Un plat, une envie…" [(ngModel)]="recherche"
+        (ngModelChange)="rechercheChangee()" (keyup.enter)="appliquerFiltres()">
+      <span class="raccourci">400 ms</span>
+    </label>
+    <label class="filtre-disponibilite" for="disponibilite">Disponibilité
+      <select id="disponibilite" [(ngModel)]="disponibilite" (ngModelChange)="appliquerFiltres()">
+        <option value="">Tous les plats</option>
+        <option value="true">Disponibles</option>
+        <option value="false">Indisponibles</option>
+      </select>
+    </label>
+    <button class="reinitialiser" type="button" (click)="reinitialiserFiltres()" *ngIf="recherche || categorieSelectionnee || disponibilite">
+      Effacer les filtres
+    </button>
+    <div class="compte-plats"><strong>{{ total }}</strong> {{ total > 1 ? 'plats' : 'plat' }} à découvrir</div>
+  </section>
+
+  <nav class="categories" aria-label="Catégories de la carte">
+    <button type="button" [class.active]="categorieSelectionnee === ''" (click)="selectionnerCategorie('')">Toute la carte</button>
+    <button type="button" [class.active]="categorieSelectionnee === 'Entrée'" (click)="selectionnerCategorie('Entrée')">Entrées</button>
+    <button type="button" [class.active]="categorieSelectionnee === 'Plat'" (click)="selectionnerCategorie('Plat')">Plats</button>
+    <button type="button" [class.active]="categorieSelectionnee === 'Dessert'" (click)="selectionnerCategorie('Dessert')">Desserts</button>
+    <button type="button" [class.active]="categorieSelectionnee === 'Boisson'" (click)="selectionnerCategorie('Boisson')">Boissons</button>
+  </nav>
+
+  <div *ngIf="ajoutMessage" class="confirmation-ajout" role="status" aria-live="polite">
+    <span aria-hidden="true">✓</span> {{ ajoutMessage }} <a routerLink="/panier">Voir mon panier →</a>
+  </div>
+
+  <div *ngIf="chargement" class="etat" role="status" aria-live="polite">
+    <span class="spinner" aria-hidden="true"></span><span>Nous préparons la carte…</span>
+  </div>
+
+  <div *ngIf="erreur" class="etat etat-erreur" role="alert">
+    <span class="symbole-erreur" aria-hidden="true">!</span>
+    <h2>La carte ne peut pas s’afficher</h2><p>{{ erreur }}</p>
+    <button type="button" (click)="chargerProduits(page)">Réessayer</button>
+  </div>
+
+  <ng-container *ngIf="!chargement && !erreur">
+    <section class="grille-produits" aria-label="Plats disponibles à la commande">
+      <article class="carte-produit" *ngFor="let produit of produits">
+        <div class="image-produit">
+          <img [src]="imageProduit(produit.code)" [alt]="'Photographie de ' + produit.nom" class="photo-produit"
+            loading="lazy" decoding="async" (error)="imageIndisponible($event)">
+          <div class="illustration" hidden aria-label="Photographie indisponible"><span aria-hidden="true">✳</span><small>Baobab Gourmand</small></div>
+          <span class="badge-disponibilite" [class.disponible]="produit.disponible" [class.indisponible]="!produit.disponible">
+            <span></span>{{ produit.disponible ? 'Disponible' : 'Indisponible' }}
+          </span>
+        </div>
+        <div class="contenu-produit">
+          <div class="ligne-categorie"><span class="categorie-produit">{{ produit.categorie }}</span>
+            <span *ngIf="produit.vegetarien" class="distinction">Végétarien</span>
+            <span *ngIf="produit.epice" class="distinction epice">Épicé</span>
+          </div>
+          <h2>{{ produit.nom }}</h2>
+          <p class="description" *ngIf="produit.description">{{ produit.description }}</p>
+          <div class="pied-produit">
+            <strong>{{ produit.prix | number:'1.0-0' }} <span>FCFA</span></strong>
+            <button type="button" class="btn-ajouter-panier" (click)="ajouterAuPanier(produit)" [disabled]="!produit.disponible">
+              <span aria-hidden="true">+</span> {{ produit.disponible ? 'Ajouter' : 'Épuisé' }}
+            </button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <div *ngIf="produits.length === 0" class="etat etat-vide">
+      <span class="plat-vide" aria-hidden="true">✳</span><h2>Aucun plat ne correspond</h2>
+      <p>Essayez une autre recherche ou parcourez toute la carte.</p>
+      <button type="button" (click)="reinitialiserFiltres()">Voir toute la carte</button>
+    </div>
+
+    <footer class="pagination" *ngIf="pages > 1" aria-label="Pagination des plats">
+      <button type="button" (click)="changerPage(page - 1)" [disabled]="page === 1">← <span>Précédent</span></button>
+      <span>Page <strong>{{ page }}</strong> sur {{ pages }}</span>
+      <button type="button" (click)="changerPage(page + 1)" [disabled]="page === pages"><span>Suivant</span> →</button>
+    </footer>
+  </ng-container>
+  </div>
+</main>

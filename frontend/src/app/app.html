@@ -1,0 +1,88 @@
+﻿@if (estAdministration()) {
+
+  <div class="application">
+
+    <aside class="sidebar">
+
+      <div class="logo">
+        <div class="logo-icon">B</div>
+        <div class="logo-text">
+          <h2>BAOBAB</h2>
+          <span>GOURMAND</span>
+        </div>
+      </div>
+
+      <div class="menu-label">MENU PRINCIPAL</div>
+
+      <nav class="navigation">
+
+        <a
+          routerLink="/dashboard"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }">
+          <span class="menu-icon">â–¦</span>
+          <span>Tableau de bord</span>
+        </a>
+
+        <a
+          routerLink="/plats"
+          routerLinkActive="active">
+          <span class="menu-icon">â™¨</span>
+          <span>Gestion des plats</span>
+        </a>
+
+        <a
+          routerLink="/commandes"
+          routerLinkActive="active">
+          <span class="menu-icon">â–¤</span>
+          <span>Gestion des commandes</span>
+        </a>
+
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="footer-icon">â—</div>
+        <div>
+          <strong>Baobab Gourmand</strong>
+          <span>Administration</span>
+        </div>
+      </div>
+
+    </aside>
+
+    <main class="main-content">
+
+      <header class="topbar">
+        <div>
+          <span class="topbar-title">Espace de gestion</span>
+          <span class="topbar-subtitle">Administration du restaurant</span>
+        </div>
+
+        <div class="admin-profile">
+          <div class="admin-avatar">A</div>
+          <div>
+            <strong>Administrateur</strong>
+            <span>Gestionnaire</span>
+          </div>
+        </div>
+        <button
+          type="button"
+          class="btn-deconnexion"
+          (click)="deconnecter()">
+          ↪ Déconnexion
+        </button>
+      </header>
+
+      <section class="page-content">
+        <router-outlet></router-outlet>
+      </section>
+
+    </main>
+
+  </div>
+
+} @else {
+
+  <router-outlet></router-outlet>
+
+}

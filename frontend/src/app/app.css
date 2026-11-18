@@ -1,0 +1,311 @@
+* {
+  box-sizing: border-box;
+}
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.application {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7fb;
+  font-family: Arial, sans-serif;
+}
+
+/* BARRE LATÉRALE */
+
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: #101c32;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 18px;
+  min-height: 100vh;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 10px 38px;
+}
+
+.logo-icon {
+  width: 43px;
+  height: 43px;
+  background: #1769e0;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.logo-text h2 {
+  font-size: 17px;
+  letter-spacing: 2px;
+  margin: 0 0 4px;
+}
+
+.logo-text span {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: #aab7cb;
+}
+
+.menu-label {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: #8290a8;
+  padding: 0 12px;
+  margin-bottom: 15px;
+}
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.navigation a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  color: #b7c2d3;
+  padding: 14px 13px;
+  border-radius: 8px;
+  font-size: 13px;
+  transition: 0.2s;
+}
+
+.navigation a:hover {
+  background: #1d2c46;
+  color: white;
+}
+
+.navigation a.active {
+  background: #1769e0;
+  color: white;
+  font-weight: 600;
+}
+
+.menu-icon {
+  width: 23px;
+  text-align: center;
+  font-size: 20px;
+}
+
+.sidebar-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid #2a3850;
+  padding: 20px 10px 0;
+  margin-top: auto;
+}
+
+.footer-icon {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: #159957;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+
+.sidebar-footer strong,
+.sidebar-footer span {
+  display: block;
+}
+
+.sidebar-footer strong {
+  font-size: 12px;
+}
+
+.sidebar-footer span {
+  font-size: 10px;
+  color: #9aa8bc;
+  margin-top: 5px;
+}
+
+/* ESPACE PRINCIPAL */
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.topbar {
+  height: 85px;
+  background: white;
+  border-bottom: 1px solid #edf0f5;
+  padding: 0 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topbar-title,
+.topbar-subtitle {
+  display: block;
+}
+
+.topbar-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #172033;
+}
+
+.topbar-subtitle {
+  font-size: 11px;
+  color: #929bad;
+  margin-top: 5px;
+}
+
+.admin-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e7f0ff;
+  color: #1769e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.admin-profile strong,
+.admin-profile span {
+  display: block;
+}
+
+.admin-profile strong {
+  font-size: 12px;
+  color: #172033;
+}
+
+.admin-profile span {
+  font-size: 10px;
+  color: #929bad;
+  margin-top: 4px;
+}
+
+.page-content {
+  min-height: calc(100vh - 85px);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+  .sidebar {
+    width: 220px;
+    min-width: 220px;
+  }
+
+  .topbar {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 650px) {
+  .application {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-width: 100%;
+    min-height: auto;
+    padding: 15px;
+  }
+
+  .logo {
+    padding: 5px 5px 18px;
+  }
+
+  .menu-label,
+  .sidebar-footer {
+    display: none;
+  }
+
+  .navigation {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .navigation a {
+    flex: 0 0 auto;
+    padding: 11px;
+    font-size: 11px;
+  }
+
+  .menu-icon {
+    display: none;
+  }
+
+  .topbar {
+    height: 70px;
+    padding: 0 15px;
+  }
+
+  .admin-profile {
+    gap: 7px;
+  }
+
+  .admin-profile strong {
+    font-size: 10px;
+  }
+
+  .page-content {
+    min-height: calc(100vh - 70px);
+  }
+}
+/* BOUTON DE DÉCONNEXION */
+.btn-deconnexion {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 17px;
+  border: 1px solid #f0d7d7;
+  border-radius: 9px;
+  background: #fff5f5;
+  color: #c0392b;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.btn-deconnexion:hover {
+  background: #c0392b;
+  border-color: #c0392b;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.btn-deconnexion:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 650px) {
+  .btn-deconnexion {
+    padding: 9px 11px;
+    font-size: 10px;
+  }
+}

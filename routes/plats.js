@@ -1,19 +1,19 @@
-const express = require("express");
+﻿const express = require("express");
 const ctrl = require("../controllers/platController");
-const verifierCleApi = require("../middlewares/verifierCleApi");
+const verifierAdmin = require("../middlewares/verifierAdmin");
 
 const router = express.Router();
 
 router
   .route("/")
   .get(ctrl.listerPlats)
-  .post(verifierCleApi, ctrl.creerPlat);
+  .post(verifierAdmin, ctrl.creerPlat);
 
 router
   .route("/:code")
   .get(ctrl.obtenirPlat)
-  .put(verifierCleApi, ctrl.remplacerPlat)
-  .patch(verifierCleApi, ctrl.modifierPlat)
-  .delete(verifierCleApi, ctrl.supprimerPlat);
+  .put(verifierAdmin, ctrl.remplacerPlat)
+  .patch(verifierAdmin, ctrl.modifierPlat)
+  .delete(verifierAdmin, ctrl.supprimerPlat);
 
 module.exports = router;

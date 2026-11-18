@@ -1,0 +1,326 @@
+.page-panier {
+  padding: 30px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.panier-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.panier-header h1 {
+  margin: 0 0 8px;
+  color: #172b22;
+}
+
+.panier-header p {
+  color: #777;
+}
+
+.badge-panier {
+  background: #e5f4eb;
+  color: #1f7a4d;
+  padding: 10px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.panier-vide {
+  text-align: center;
+  padding: 70px 20px;
+  background: #fff;
+  border-radius: 14px;
+}
+
+.icone-vide {
+  font-size: 55px;
+}
+
+.panier-vide h2 {
+  color: #263b30;
+}
+
+.panier-vide p {
+  color: #777;
+}
+
+.liste-panier {
+  background: white;
+  border-radius: 12px;
+  padding: 10px 25px;
+}
+
+.ligne-panier {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  gap: 20px;
+  align-items: center;
+  padding: 22px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.info-produit h3 {
+  margin: 0 0 5px;
+  color: #263b30;
+}
+
+.info-produit p {
+  margin: 5px 0;
+  color: #888;
+}
+
+.info-produit strong,
+.sous-total {
+  color: #1f7a4d;
+  font-weight: 700;
+}
+
+.quantite {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.quantite button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: #e5f4eb;
+  color: #1f7a4d;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.quantite span {
+  font-weight: 700;
+}
+
+.btn-supprimer {
+  border: none;
+  background: transparent;
+  color: #dc3545;
+  cursor: pointer;
+}
+
+.resume-panier {
+  background: white;
+  margin-top: 25px;
+  padding: 25px;
+  border-radius: 12px;
+  max-width: 400px;
+  margin-left: auto;
+}
+
+.resume-panier > div {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.total-final {
+  border-top: 1px solid #eee;
+  padding-top: 18px;
+  font-size: 18px;
+}
+
+.total-final strong {
+  color: #1f7a4d;
+}
+
+.btn-vider,
+.btn-valider {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 7px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.2s;
+}
+
+.btn-vider {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-vider:hover {
+  background: #bb2d3b;
+}
+
+.btn-valider {
+  background: #1f7a4d;
+  color: white;
+}
+
+.btn-valider:hover {
+  background: #17613c;
+}
+
+/* Messages */
+.message-succes,
+.message-erreur {
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.message-succes {
+  background: #e5f4eb;
+  color: #1f7a4d;
+}
+
+.message-erreur {
+  background: #fdeaea;
+  color: #c62828;
+}
+
+/* Formulaire de commande */
+.formulaire-commande {
+  background: white;
+  margin-top: 30px;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.formulaire-commande h2 {
+  color: #172b22;
+  margin-top: 0;
+}
+
+.formulaire-commande > p {
+  color: #777;
+  margin-bottom: 25px;
+}
+
+.champs-formulaire {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.champ {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.champ label {
+  font-weight: 600;
+  color: #263b30;
+}
+
+.champ input,
+.champ select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ddd;
+  border-radius: 7px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+.champ input:focus,
+.champ select:focus {
+  border-color: #1f7a4d;
+  box-shadow: 0 0 0 3px rgba(31, 122, 77, 0.1);
+}
+
+.recapitulatif {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #f5faf6;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 25px;
+}
+
+.recapitulatif span {
+  color: #555;
+}
+
+.recapitulatif strong {
+  color: #1f7a4d;
+  font-size: 23px;
+}
+
+.recapitulatif small {
+  color: #777;
+}
+
+.actions-formulaire {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.btn-annuler,
+.btn-confirmer {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 7px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-annuler {
+  background: #eee;
+  color: #444;
+}
+
+.btn-confirmer {
+  background: #1f7a4d;
+  color: white;
+}
+
+.btn-confirmer:hover {
+  background: #17613c;
+}
+
+.btn-confirmer:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 700px) {
+  .page-panier {
+    padding: 15px;
+  }
+
+  .ligne-panier {
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+  }
+
+  .panier-header {
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .champs-formulaire {
+    grid-template-columns: 1fr;
+  }
+
+  .formulaire-commande {
+    padding: 20px;
+  }
+
+  .actions-formulaire {
+    flex-direction: column;
+  }
+
+  .btn-annuler,
+  .btn-confirmer {
+    width: 100%;
+  }
+}
